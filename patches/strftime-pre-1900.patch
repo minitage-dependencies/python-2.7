@@ -1,4 +1,4 @@
-diff -ur Python-2.6.6/Lib/test/test_datetime.py Python-2.6.6-stftime/Lib/test/test_datetime.py
+diff -ru Lib/test/test_datetime.py Lib/test/test_datetime.py
 --- Lib/test/test_datetime.py	2010-05-31 16:00:34.000000000 +0000
 +++ Lib/test/test_datetime.py	2010-10-08 04:28:50.000000000 +0000
 @@ -846,6 +846,7 @@
@@ -57,9 +57,9 @@ diff -ur Python-2.6.6/Lib/test/test_datetime.py Python-2.6.6-stftime/Lib/test/te
  
      def test_replace(self):
          cls = self.theclass
-diff -ur Python-2.6.6/Modules/datetimemodule.c Python-2.6.6-stftime/Modules/datetimemodule.c
+diff -ru Modules/datetimemodule.c Modules/datetimemodule.c
 --- Modules/datetimemodule.c	2010-05-27 21:53:16.000000000 +0000
-+++ Modules/datetimemodule.c	2010-10-08 04:33:35.000000000 +0000
++++ Modules/datetimemodule.c	2010-10-08 04:56:05.000000000 +0000
 @@ -1151,6 +1151,32 @@
      return PyString_FromStringAndSize(freplacement, strlen(freplacement));
  }
@@ -125,7 +125,7 @@ diff -ur Python-2.6.6/Modules/datetimemodule.c Python-2.6.6-stftime/Modules/date
      /* Scan the input format, looking for %z/%Z/%f escapes, building
       * a new format.  Since computing the replacements for those codes
       * is expensive, don't unless they're actually used.
-@@ -1343,12 +1344,26 @@
+@@ -1343,12 +1344,27 @@
      if (_PyString_Resize(&newfmt, usednew) < 0)
          goto Done;
      {
@@ -135,6 +135,7 @@ diff -ur Python-2.6.6/Modules/datetimemodule.c Python-2.6.6-stftime/Modules/date
 -        result = PyObject_CallMethod(time, "strftime", "OO",
 -                                     newfmt, timetuple);
 -        Py_DECREF(time);
++                struct tm buf;
 +		char *outbuf = 0;
 +		char *c_newfmt = PyString_AsString(newfmt);
 +		size_t i;
