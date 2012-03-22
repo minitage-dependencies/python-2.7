@@ -67,7 +67,7 @@ for i in imports:
     except Exception, e:
         msg(["ERROR on %s" % i,"%s" % e])
 
-if not ('Minitage' in urllib2.urlopen('https://www.minitage.org').read()):
+if not ('github' in urllib2.urlopen('https://github.com/').read()):
     msg("Problem with ssl layer")
 
 
