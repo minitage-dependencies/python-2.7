@@ -1,21 +1,22 @@
-diff -ur o/Lib/rlcompleter.py n/Lib/rlcompleter.py
---- Lib/rlcompleter.py	2010-10-31 19:38:20.166172334 +0100
-+++ Lib/rlcompleter.py	2010-10-31 19:47:34.506192450 +0100
-@@ -72,25 +72,39 @@
+diff -Nur Python-2.7.2/Lib/rlcompleter.py Python-2.7.2.darwin//Lib/rlcompleter.py
+--- Python-2.7.2/Lib/rlcompleter.py	2011-06-11 17:46:25.000000000 +0200
++++ Python-2.7.2.darwin//Lib/rlcompleter.py	2012-03-22 12:19:01.125620455 +0100
+@@ -71,26 +71,41 @@
+         else:
              self.use_main_ns = 0
              self.namespace = namespace
- 
-+         # The cache of matches for a particular text fragment.
++        # The cache of matches for a particular text fragment.
 +        self.matches = []
-+
++ 
+ 
      def complete(self, text, state):
          """Return the next possible completion for 'text'.
  
          This is called successively with state == 0, 1, 2, ... until it
 -        returns None.  The completion should begin with 'text'.
-+        returns None.  The completion should begin with 'text'.  Any text
++         returns None.  The completion should begin with 'text'.  Any text
 +        with a period (.) will match as an attribute.  Any text that begins
-+        with a single or double quote will match using file name expansion.
++        with a single or double quote will match using file name expansion. 
  
          """
          if self.use_main_ns:
@@ -28,7 +29,7 @@ diff -ur o/Lib/rlcompleter.py n/Lib/rlcompleter.py
 +        # will then iterate through this set of matches.
 +            if ('"' in text) or ("'" in text):
 +                self.matches = self.file_matches(text)
-+            elif "." in text:
++            elif "." in text: 
                  self.matches = self.attr_matches(text)
              else:
                  self.matches = self.global_matches(text)
@@ -43,29 +44,25 @@ diff -ur o/Lib/rlcompleter.py n/Lib/rlcompleter.py
 +            except IndexError:
 +                return None
 +        else:
-+             return None
++             return None 
++
  
      def _callable_postfix(self, val, word):
          if hasattr(val, '__call__'):
-@@ -129,10 +143,14 @@
+@@ -129,6 +144,9 @@
  
          """
          import re
 +        import types
 +
-+        # Setup the regular expression for attributes
++        # Setup the regular expression for attributes 
          m = re.match(r"(\w+(\.\w+)*)\.(\w*)", text)
          if not m:
              return []
-         expr, attr = m.group(1, 3)
-+        # Group 1 is the class name, group 3 is the attribute text
-         try:
-             thisobject = eval(expr, self.namespace)
-         except Exception:
-@@ -142,10 +160,18 @@
-         words = dir(thisobject)
+@@ -143,9 +161,21 @@
          if "__builtins__" in words:
              words.remove("__builtins__")
+ 
 +        # If this type is a class instance, use the __class__ member to
 +        # get the dictionary of attributes
 +        if type(thisobject) == types.InstanceType:
@@ -76,18 +73,18 @@ diff -ur o/Lib/rlcompleter.py n/Lib/rlcompleter.py
 +            words.extend(get_class_members(thisobject))
 +        else:
 +            words.extend(dir(thisobject))
- 
--        if hasattr(thisobject, '__class__'):
--            words.append('__class__')
--            words.extend(get_class_members(thisobject.__class__))
++
+         if hasattr(thisobject, '__class__'):
+             words.append('__class__')
+             words.extend(get_class_members(thisobject.__class__))
 +        # Build the full matching text from class.attribute matches
          matches = []
          n = len(attr)
          for word in words:
-@@ -155,6 +181,43 @@
+@@ -154,6 +184,43 @@
+                 word = self._callable_postfix(val, "%s.%s" % (expr, word))
                  matches.append(word)
          return matches
- 
 +    def file_matches(self, text):
 +        """Compute matches when text is a file name.
 +
@@ -124,7 +121,7 @@ diff -ur o/Lib/rlcompleter.py n/Lib/rlcompleter.py
 +            else:
 +                matches.append( quote + entry )
 +        return matches
-+
++ 
+ 
  def get_class_members(klass):
      ret = dir(klass)
-     if hasattr(klass,'__bases__'):
