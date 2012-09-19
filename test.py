@@ -70,6 +70,8 @@ for i in imports:
 if not ('github' in urllib2.urlopen('https://github.com/').read()):
     msg("Problem with ssl layer")
 
+import datetime;print datetime.datetime(1800,1,1).strftime('%Y') == '1800'
+
 
 
 if sys.platform == 'darwin':

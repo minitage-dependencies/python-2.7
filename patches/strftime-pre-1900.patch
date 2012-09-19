@@ -1,7 +1,7 @@
-diff -ru Lib/test/test_datetime.py Lib/test/test_datetime.py
---- Lib/test/test_datetime.py	2010-05-31 16:00:34.000000000 +0000
-+++ Lib/test/test_datetime.py	2010-10-08 04:28:50.000000000 +0000
-@@ -846,6 +846,7 @@
+diff -uNr Python-2.7.3.minitage//Lib/test/test_datetime.py Python-2.7.3.dt//Lib/test/test_datetime.py
+--- Python-2.7.3.minitage//Lib/test/test_datetime.py	2012-04-10 01:07:31.000000000 +0200
++++ Python-2.7.3.dt//Lib/test/test_datetime.py	2012-09-19 15:49:11.000000000 +0200
+@@ -864,6 +864,7 @@
          self.assertEqual(t.strftime("m:%m d:%d y:%y"), "m:03 d:02 y:05")
          self.assertEqual(t.strftime(""), "") # SF bug #761337
          self.assertEqual(t.strftime('x'*1000), 'x'*1000) # SF bug #1556784
@@ -9,7 +9,7 @@ diff -ru Lib/test/test_datetime.py Lib/test/test_datetime.py
  
          self.assertRaises(TypeError, t.strftime) # needs an arg
          self.assertRaises(TypeError, t.strftime, "one", "two") # too many args
-@@ -874,6 +875,33 @@
+@@ -892,6 +893,33 @@
          #check that this standard extension works
          t.strftime("%f")
  
@@ -39,12 +39,12 @@ diff -ru Lib/test/test_datetime.py Lib/test/test_datetime.py
 +        self.assertRaises(TypeError, t.strftime, 42) # arg wrong type
 +
 +        # A naive object replaces %z and %Z w/ empty strings.
-+        self.assertEqual(t.strftime("'%z' '%Z'"), "'' ''") 
++
  
      def test_format(self):
          dt = self.theclass(2007, 9, 10)
-@@ -1038,11 +1066,11 @@
-         self.failUnless(self.theclass.max)
+@@ -1056,11 +1084,11 @@
+         self.assertTrue(self.theclass.max)
  
      def test_strftime_out_of_range(self):
 -        # For nasty technical reasons, we can't handle years before 1900.
@@ -57,13 +57,14 @@ diff -ru Lib/test/test_datetime.py Lib/test/test_datetime.py
  
      def test_replace(self):
          cls = self.theclass
-diff -ru Modules/datetimemodule.c Modules/datetimemodule.c
---- Modules/datetimemodule.c	2010-05-27 21:53:16.000000000 +0000
-+++ Modules/datetimemodule.c	2010-10-08 04:56:05.000000000 +0000
-@@ -1151,6 +1151,32 @@
+diff -uNr Python-2.7.3.minitage//Modules/datetimemodule.c Python-2.7.3.dt//Modules/datetimemodule.c
+--- Python-2.7.3.minitage//Modules/datetimemodule.c	2012-04-10 01:07:34.000000000 +0200
++++ Python-2.7.3.dt//Modules/datetimemodule.c	2012-09-19 15:53:28.000000000 +0200
+@@ -1151,6 +1151,33 @@
      return PyString_FromStringAndSize(freplacement, strlen(freplacement));
  }
  
++
 +/* copied straight out of timemodule.c */
 +static int
 +gettmarg(PyObject *args, struct tm *p)
@@ -88,12 +89,12 @@ diff -ru Modules/datetimemodule.c Modules/datetimemodule.c
 +	p->tm_yday--;
 +	return 1;
 +}
-+ 
++
 +
  /* I sure don't want to reproduce the strftime code from the time module,
   * so this imports the module and calls it.  All the hair is due to
   * giving special meanings to the %z, %Z and %f format codes via a
-@@ -1182,31 +1208,6 @@
+@@ -1182,31 +1209,6 @@
  
      assert(object && format && timetuple);
  
@@ -125,7 +126,7 @@ diff -ru Modules/datetimemodule.c Modules/datetimemodule.c
      /* Scan the input format, looking for %z/%Z/%f escapes, building
       * a new format.  Since computing the replacements for those codes
       * is expensive, don't unless they're actually used.
-@@ -1343,12 +1344,27 @@
+@@ -1343,12 +1345,27 @@
      if (_PyString_Resize(&newfmt, usednew) < 0)
          goto Done;
      {
@@ -135,7 +136,7 @@ diff -ru Modules/datetimemodule.c Modules/datetimemodule.c
 -        result = PyObject_CallMethod(time, "strftime", "OO",
 -                                     newfmt, timetuple);
 -        Py_DECREF(time);
-+                struct tm buf;
++        struct tm buf;
 +		char *outbuf = 0;
 +		char *c_newfmt = PyString_AsString(newfmt);
 +		size_t i;
