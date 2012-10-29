@@ -1,6 +1,6 @@
-diff -uNr Python-2.7.3.minitage//Lib/test/test_datetime.py Python-2.7.3.dt//Lib/test/test_datetime.py
---- Python-2.7.3.minitage//Lib/test/test_datetime.py	2012-04-10 01:07:31.000000000 +0200
-+++ Python-2.7.3.dt//Lib/test/test_datetime.py	2012-09-19 15:49:11.000000000 +0200
+diff -uNr Python-2.7.3.minitage/Lib/test/test_datetime.py Python-2.7.3.dt/Lib/test/test_datetime.py
+--- Python-2.7.3.minitage/Lib/test/test_datetime.py	2012-04-10 01:07:31.000000000 +0200
++++ Python-2.7.3.dt/Lib/test/test_datetime.py	2012-09-19 15:49:11.000000000 +0200
 @@ -864,6 +864,7 @@
          self.assertEqual(t.strftime("m:%m d:%d y:%y"), "m:03 d:02 y:05")
          self.assertEqual(t.strftime(""), "") # SF bug #761337
@@ -57,9 +57,9 @@ diff -uNr Python-2.7.3.minitage//Lib/test/test_datetime.py Python-2.7.3.dt//Lib/
  
      def test_replace(self):
          cls = self.theclass
-diff -uNr Python-2.7.3.minitage//Modules/datetimemodule.c Python-2.7.3.dt//Modules/datetimemodule.c
---- Python-2.7.3.minitage//Modules/datetimemodule.c	2012-04-10 01:07:34.000000000 +0200
-+++ Python-2.7.3.dt//Modules/datetimemodule.c	2012-09-19 15:53:28.000000000 +0200
+diff -uNr Python-2.7.3.minitage/Modules/datetimemodule.c Python-2.7.3.dt/Modules/datetimemodule.c
+--- Python-2.7.3.minitage/Modules/datetimemodule.c	2012-04-10 01:07:34.000000000 +0200
++++ Python-2.7.3.dt/Modules/datetimemodule.c	2012-09-19 15:53:28.000000000 +0200
 @@ -1151,6 +1151,33 @@
      return PyString_FromStringAndSize(freplacement, strlen(freplacement));
  }
