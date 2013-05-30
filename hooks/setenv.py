@@ -4,6 +4,7 @@ try:
 except:
     from platform import uname
 import re
+import shutil
 #ef getpythonenv(options,buildout):
 #   """Where python looks to get its cflags."""
 #   if os.uname()[0] == 'Darwin':
@@ -84,6 +85,9 @@ def patchincludes(options,buildout):
     """Where python looks to get its cflags."""
     u, v = uname()[0],uname()[3]
     #import pdb;pdb.set_trace()
+    if os.path.exists(options['location']):
+        shutil.rmtree(options['location'])
+        os.makedirs(options['location'])
     if u == 'Darwin' and v == '9.8.0':
         cmyfile = [l for l in open(
                         os.path.join(
